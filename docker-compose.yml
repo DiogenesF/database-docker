@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  postgres-compose:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "ozbambaz"
+    ports:
+      - "15432:5432"
+    volumes:
+      - C:/Users/dioge/Documents/docker-postgres/files:/var/lib/postgresql/data  # O caminho que precede os ':' deve ser um diretorio da sua maquina em q voce queira q fique os arquivos do BD
+    networks:
+      - postgres-compose-network
+      
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "ozbambaz@hotmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "ozbambaz"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres-compose
+    networks:
+      - postgres-compose-network
+
+networks: 
+  postgres-compose-network:
+    driver: bridge
