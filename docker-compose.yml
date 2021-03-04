@@ -1,32 +1,29 @@
 version: '3'
-
+ 
 services:
-  postgres-compose:
-    image: postgres
+  db:
+    image: mysql
+    container_name: db
     environment:
-      POSTGRES_PASSWORD: "ozbambaz"
+      MYSQL_ROOT_PASSWORD: ozbambaz
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: ozbambaz
+      MYSQL_PASSWORD: ozbambaz
     ports:
-      - "15432:5432"
+      - "6033:3306"
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - postgres-compose-network
-      
-  pgadmin-compose:
-    image: dpage/pgadmin4
+      - dbdata:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - db
     environment:
-      PGADMIN_DEFAULT_EMAIL: "ozbambaz@hotmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "ozbambaz"
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
     ports:
-      - "16543:80"
-    depends_on:
-      - postgres-compose
-    networks:
-      - postgres-compose-network
-
-networks: 
-  postgres-compose-network:
-    driver: bridge
-
+      - 8081:80
 volumes:
-  pgdata:
+  dbdata:
